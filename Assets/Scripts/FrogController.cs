@@ -80,7 +80,7 @@ public class FrogController : MonoBehaviour
         if (other.gameObject.tag == "Food")
         {
             Destroy(other.gameObject);
-            Energy += 2f;
+            Energy += 3f;
         }
     }
 

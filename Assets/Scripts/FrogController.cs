@@ -86,7 +86,7 @@ public class FrogController : MonoBehaviour
 
     private void CalculateMetabolism()
     {
-        Metabolism = (Size * 2f) + (Speed * 2f);
+        Metabolism = (Size * 100f * 0.5f) + (Speed * 0.5f);
     }
 
     private void UpdateTimer()

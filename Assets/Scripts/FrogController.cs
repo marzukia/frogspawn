@@ -14,7 +14,7 @@ public class FrogController : MonoBehaviour
     public Color32 Color;
     public bool ReproductionActive;
     public float ReproductionTimer;
-    public float ReproductionCooldown = 30f;
+    public float ReproductionCooldown;
     public float MutationRate = 0.15f;
 
     private Rigidbody2D _rb2d;
@@ -47,7 +47,8 @@ public class FrogController : MonoBehaviour
     private void InitialStartActions()
     {
         Size = Random.Range(1, 5) / 100f;
-        Speed = Random.Range(1, 15) * (1f - Size);
+        Speed = Random.Range(1, 5) * (1f - Size);
+        ReproductionCooldown = Random.Range(0, 60);
         Energy = 50;
         Health = 100f * (1f + Size);
         Color = new Color32(
@@ -62,8 +63,9 @@ public class FrogController : MonoBehaviour
     private void MutationRoll()
     {
         if (Random.Range(0, 100) / 100f < MutationRate) {
-            Size = Random.Range(1, 20) / 100f;
-            Speed = Random.Range(1, 10) * (1f - Size);
+            Size = Random.Range(1, 5) / 100f;
+            Speed = Random.Range(1, 5) * (1f - Size);
+            ReproductionCooldown = Random.Range(0, 60);
         }
     }
 
@@ -71,7 +73,7 @@ public class FrogController : MonoBehaviour
         if (other.gameObject.tag == "Food")
         {
             Destroy(other.gameObject);
-            Energy += 5;
+            Energy += 2;
         }
     }
 
@@ -89,10 +91,31 @@ public class FrogController : MonoBehaviour
 
     private void MoveFrog()
     {
-        var horizontalMovement = Random.Range(-1f, 1f);
-        var verticalMovement = Random.Range(-1f, 1f);
-        var movementVector = new Vector3(horizontalMovement, verticalMovement);
+        // var horizontalMovement = Random.Range(-1f, 1f);
+        // var verticalMovement = Random.Range(-1f, 1f);
+        // var movementVector = new Vector3(horizontalMovement, verticalMovement);
+        var movementVector = FindClosestFood();
         _rb2d.AddForce(movementVector * Speed);
+    }
+
+    private Vector3 FindClosestFood()
+    {
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 closestDirectionVector = transform.position;
+        GameObject[] allFood = GameObject.FindGameObjectsWithTag("Food");
+
+        foreach (GameObject food in allFood)
+        {
+            var directionVector = food.transform.position - transform.position;
+            var distanceSqr = directionVector.sqrMagnitude;
+
+            if (distanceSqr < closestDistanceSqr) {
+                closestDistanceSqr = distanceSqr;
+                closestDirectionVector = directionVector;
+            }
+        }
+
+        return closestDirectionVector;
     }
 
     private void ConsumeEnergy()

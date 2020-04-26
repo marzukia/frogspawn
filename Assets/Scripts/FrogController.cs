@@ -120,7 +120,8 @@ public class FrogController : MonoBehaviour
 
     private void ConsumeEnergy()
     {
-        Energy -= Size * 1f;
+        Energy -= (Size * 0.5f);
+        Energy -= (Speed * 0.01f);
     }
 
     private void CalculateHealth()

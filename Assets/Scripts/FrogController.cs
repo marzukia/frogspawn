@@ -49,7 +49,7 @@ public class FrogController : MonoBehaviour
     {
         Size = Random.Range(1, 15) / 100f;
         Speed = Random.Range(1, 10) * (1f - Size);
-        ReproductionCooldown = Random.Range(0, 60);
+        ReproductionCooldown = Random.Range(1, 10);
         Energy = 50;
         Health = 100f * (1f + Size);
         Color = new Color32(
@@ -66,7 +66,7 @@ public class FrogController : MonoBehaviour
         if (Random.Range(0, 100) / 100f < MutationRate) {
             Size = Random.Range(1, 15) / 100f;
             Speed = Random.Range(1, 10) * (1f - Size);
-            ReproductionCooldown = Random.Range(0, 60);
+            ReproductionCooldown = Random.Range(1, 10);
             Color = new Color32(
                 (byte) Random.Range(0, 256),
                 (byte) Random.Range(0, 256),

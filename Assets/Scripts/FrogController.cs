@@ -32,7 +32,7 @@ public class FrogController : MonoBehaviour
         _rb2d.freezeRotation = true;
         _renderer = GetComponent<SpriteRenderer>();
         _renderer.color = Color;
-        transform.localScale = new Vector3(Size, Size);
+        transform.localScale = new Vector3(Size / 100, Size / 100);
         CalculateMetabolism();
     }
 
@@ -47,8 +47,8 @@ public class FrogController : MonoBehaviour
 
     private void InitialStartActions()
     {
-        Size = Random.Range(1, 15) / 100f;
-        Speed = Random.Range(1, 10) * (1f - Size);
+        Size = Random.Range(1, 15);
+        Speed = Random.Range(1, 5);
         ReproductionCooldown = Random.Range(1, 10);
         Energy = 50;
         Health = 100f * (1f + Size);
@@ -64,8 +64,8 @@ public class FrogController : MonoBehaviour
     private void MutationRoll()
     {
         if (Random.Range(0, 100) / 100f < MutationRate) {
-            Size = Random.Range(1, 15) / 100f;
-            Speed = Random.Range(1, 10) * (1f - Size);
+            Size = Random.Range(1, 15) / (Size / 3f);
+            Speed = Random.Range(1, 10) - (Size / 3f);
             ReproductionCooldown = Random.Range(1, 10);
             Color = new Color32(
                 (byte) Random.Range(0, 256),
@@ -80,13 +80,13 @@ public class FrogController : MonoBehaviour
         if (other.gameObject.tag == "Food")
         {
             Destroy(other.gameObject);
-            Energy += 2.5f;
+            Energy += 2f;
         }
     }
 
     private void CalculateMetabolism()
     {
-        Metabolism = (Size * 100f * 0.5f) + (Speed * 0.5f);
+        Metabolism = (Size * 0.5f) + (Speed * 0.5f);
     }
 
     private void UpdateTimer()
@@ -139,11 +139,11 @@ public class FrogController : MonoBehaviour
     {
         if (Energy > 0 && Health < 100)
         {
-            Health += 1f;
+            Health += 50f;
         }
         else if (Energy < 0 && Health > 0)
         {
-            Health -= 5f;
+            Health -= 50f;
         } else if (Health <= 0)
         {
             Destroy(gameObject);

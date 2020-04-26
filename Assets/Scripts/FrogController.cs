@@ -16,6 +16,7 @@ public class FrogController : MonoBehaviour
     public float ReproductionTimer;
     public float ReproductionCooldown;
     public float MutationRate = 0.15f;
+    public float Metabolism;
 
     private Rigidbody2D _rb2d;
     private SpriteRenderer _renderer;
@@ -32,6 +33,7 @@ public class FrogController : MonoBehaviour
         _renderer = GetComponent<SpriteRenderer>();
         _renderer.color = Color;
         transform.localScale = new Vector3(Size, Size);
+        CalculateMetabolism();
     }
 
     private void Update()
@@ -39,15 +41,14 @@ public class FrogController : MonoBehaviour
         MoveFrog();
         ConsumeEnergy();
         CalculateHealth();
-        UpdateStats();
         CreateOffspring();
         UpdateTimer();
     }
 
     private void InitialStartActions()
     {
-        Size = Random.Range(1, 5) / 100f;
-        Speed = Random.Range(1, 5) * (1f - Size);
+        Size = Random.Range(1, 15) / 100f;
+        Speed = Random.Range(1, 10) * (1f - Size);
         ReproductionCooldown = Random.Range(0, 60);
         Energy = 50;
         Health = 100f * (1f + Size);
@@ -63,9 +64,15 @@ public class FrogController : MonoBehaviour
     private void MutationRoll()
     {
         if (Random.Range(0, 100) / 100f < MutationRate) {
-            Size = Random.Range(1, 5) / 100f;
-            Speed = Random.Range(1, 5) * (1f - Size);
+            Size = Random.Range(1, 15) / 100f;
+            Speed = Random.Range(1, 10) * (1f - Size);
             ReproductionCooldown = Random.Range(0, 60);
+            Color = new Color32(
+                (byte) Random.Range(0, 256),
+                (byte) Random.Range(0, 256),
+                (byte) Random.Range(0, 256),
+                (byte) 255
+            );
         }
     }
 
@@ -73,8 +80,13 @@ public class FrogController : MonoBehaviour
         if (other.gameObject.tag == "Food")
         {
             Destroy(other.gameObject);
-            Energy += 2;
+            Energy += 2.5f;
         }
+    }
+
+    private void CalculateMetabolism()
+    {
+        Metabolism = (Size * 1f) + (Speed * 1f);
     }
 
     private void UpdateTimer()
@@ -120,8 +132,7 @@ public class FrogController : MonoBehaviour
 
     private void ConsumeEnergy()
     {
-        Energy -= (Size * 0.5f);
-        Energy -= (Speed * 0.01f);
+        Energy -= Metabolism * Time.deltaTime;
     }
 
     private void CalculateHealth()
@@ -137,11 +148,6 @@ public class FrogController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private void UpdateStats()
-    {
-
     }
 
     private void CreateOffspring()

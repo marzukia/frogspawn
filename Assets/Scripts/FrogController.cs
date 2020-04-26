@@ -17,6 +17,7 @@ public class FrogController : MonoBehaviour
     public float ReproductionCooldown;
     public float MutationRate = 0.15f;
     public float Metabolism;
+    public float Intelligence;
 
     private Rigidbody2D _rb2d;
     private SpriteRenderer _renderer;
@@ -49,6 +50,7 @@ public class FrogController : MonoBehaviour
     {
         Size = Random.Range(1, 15);
         Speed = Random.Range(1, 5);
+        Intelligence = Random.Range(1, 100);
         ReproductionCooldown = Random.Range(1, 10);
         Energy = 50;
         Health = 100f * (1f + Size);
@@ -67,6 +69,7 @@ public class FrogController : MonoBehaviour
             Size = Random.Range(1, 15) / (Size / 3f);
             Speed = Random.Range(1, 10) - (Size / 3f);
             ReproductionCooldown = Random.Range(1, 10);
+            Intelligence = Random.Range(1, 100);
             Color = new Color32(
                 (byte) Random.Range(0, 256),
                 (byte) Random.Range(0, 256),
@@ -86,7 +89,7 @@ public class FrogController : MonoBehaviour
 
     private void CalculateMetabolism()
     {
-        Metabolism = (Size * 0.5f) + (Speed * 0.5f);
+        Metabolism = (Size * 0.5f) + (Speed * 0.5f) + (Intelligence / 20 * 0.5f);
     }
 
     private void UpdateTimer()
@@ -103,11 +106,17 @@ public class FrogController : MonoBehaviour
 
     private void MoveFrog()
     {
-        // var horizontalMovement = Random.Range(-1f, 1f);
-        // var verticalMovement = Random.Range(-1f, 1f);
-        // var movementVector = new Vector3(horizontalMovement, verticalMovement);
-        var movementVector = FindClosestFood();
-        _rb2d.AddForce(movementVector * Speed);
+        if (Random.Range(0, 100) < Intelligence)
+        {
+            var movementVector = FindClosestFood();
+            _rb2d.AddForce(movementVector * Speed);
+        }
+        else
+        {
+            var horizontalMovement = Random.Range(-1f, 1f);
+            var verticalMovement = Random.Range(-1f, 1f);
+            var movementVector = new Vector3(horizontalMovement, verticalMovement);
+        }
     }
 
     private Vector3 FindClosestFood()

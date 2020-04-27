@@ -41,9 +41,9 @@ public class TotalFoodController : MonoBehaviour
     {
         var bounds = BackgroundSpriteRenderer.bounds;
         return new Vector3(
-            Random.Range(bounds.min.x, bounds.max.x),
-            Random.Range(bounds.min.y, bounds.max.y),
-            Random.Range(bounds.min.z, bounds.max.z)
+            Random.Range(bounds.min.x * 0.95f, bounds.max.x * 0.95f),
+            Random.Range(bounds.min.y * 0.95f, bounds.max.y * 0.95f),
+            Random.Range(bounds.min.z * 0.95f, bounds.max.z * 0.95f)
         );
     }
 }
